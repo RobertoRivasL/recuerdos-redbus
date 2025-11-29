@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redbus San Carlos | Recuerdos</title>
+    <style>
+        :root {
+            --redbus-red: #da291c;
+            --redbus-dark: #b71c1c;
+            --dark-grey: #222;
+            --light-grey: #f0f0f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+            /* Flexbox para empujar el footer al fondo */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(135deg, var(--redbus-red), var(--redbus-dark));
+            color: white;
+            padding: 30px 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* --- MENÚ DE NAVEGACIÓN --- */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px 0;
+            border: none;
+            background: white;
+            color: #555;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-btn.active {
+            color: var(--redbus-red);
+            border-bottom: 3px solid var(--redbus-red);
+            background-color: #fff5f5;
+        }
+
+        .nav-btn:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* --- CONTENEDOR --- */
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+            flex: 1; /* Esto hace que ocupe el espacio sobrante */
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ESTILOS: GALERÍA (GRID) --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding-bottom: 20px;
+        }
+
+        .grid-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 150px;
+            position: relative;
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .grid-item img:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- MODAL (ZOOM) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 5px;
+            animation: zoom 0.3s;
+        }
+
+        @keyframes zoom {
+            from {transform:scale(0)}
+            to {transform:scale(1)}
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--redbus-red);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* --- CARRUSEL --- */
+        .carousel-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .mySlides {
+            display: none;
+            text-align: center;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            background-color: #222;
+        }
+
+        /* Estilo especial para la dedicatoria larga */
+        .caption-text {
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            margin-top: -22px;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            user-select: none;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: var(--redbus-red);
+        }
+
+        /* --- VIDEOS --- */
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        video {
+            width: 100%;
+            border-radius: 5px;
+            max-height: 500px;
+        }
+
+        .video-title {
+            padding-top: 10px;
+            font-weight: bold;
+            color: #444;
+            text-align: center;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        footer .heart {
+            color: var(--redbus-red);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Redbus San Carlos</h1>
+        <p>⚽ Pichangas y Tercer Tiempo 🍺</p>
+    </header>
+
+    <nav class="nav-menu">
+        <button class="nav-btn active" onclick="openTab('fotos')">FOTOS</button>
+        <button class="nav-btn" onclick="openTab('carrusel')">CARRUSEL</button>
+        <button class="nav-btn" onclick="openTab('videos')">VIDEOS</button>
+    </nav>
+
+    <div class="container">
+
+        <div id="fotos" class="tab-content active">
+            <h3 style="text-align:center; color:#555;">Galería Rápida</h3>
+            <p style="text-align:center; margin-bottom:15px; font-size:0.9em; color:#777;">Toca una foto para ampliarla</p>
+
+            <div class="photo-grid">
+                <div class="grid-item"><img src="01.jpeg" onclick="openModal(this.src)" alt="Relax"></div>
+                <div class="grid-item"><img src="02.jpeg" onclick="openModal(this.src)" alt="Jugada"></div>
+                <div class="grid-item"><img src="03.jpeg" onclick="openModal(this.src)" alt="Tercer Tiempo"></div>
+                <div class="grid-item"><img src="04.jpeg" onclick="openModal(this.src)" alt="Cancha"></div>
+                <div class="grid-item"><img src="05.jpeg" onclick="openModal(this.src)" alt="Posando"></div>
+                <div class="grid-item"><img src="06.jpeg" onclick="openModal(this.src)" alt="Balón"></div>
+                <div class="grid-item"><img src="07.jpeg" onclick="openModal(this.src)" alt="Dedicatoria"></div>
+                <div class="grid-item"><img src="08.jpeg" onclick="openModal(this.src)" alt="Equipo"></div>
+            </div>
+        </div>
+
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img class="modal-content" id="imgExpanded">
+        </div>
+
+        <div id="carrusel" class="tab-content">
+            <h3 style="text-align:center; color:#555;">Visor Secuencial</h3>
+            <div class="carousel-container">
+
+                <div class="mySlides">
+                    <img src="01.jpeg">
+                    <div class="caption-text">El descanso merecido</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="02.jpeg">
+                    <div class="caption-text">En plena jugada</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="03.jpeg">
+                    <div class="caption-text">Hidratación estratégica</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="04.jpeg">
+                    <div class="caption-text">Cancha impecable</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="05.jpeg">
+                    <div class="caption-text">Posando para la cámara</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="06.jpeg">
+                    <div class="caption-text">Control de balón</div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="07.jpeg">
+                    <div class="caption-text" style="font-size: 0.9rem;">
+                        ¡Hermoso! Muchas gracias a tod@s que siempre están dedicando su tiempo para hermosear nuestro lugar de trabajo... ahora nuestro trabajo es cuidar este esfuerzo.
+                    </div>
+                </div>
+
+                <div class="mySlides">
+                    <img src="08.jpeg">
+                    <div class="caption-text">¡Vamos Redbus!</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+        </div>
+
+        <div id="videos" class="tab-content">
+            <h3 style="text-align:center; color:#555;">Videos del Partido</h3>
+            <div class="video-list">
+
+                <div class="video-card">
+                    <video controls preload="none" poster="02.jpeg">
+                        <source src="02.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-title">Ambiente de cancha</div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="none" poster="04.jpeg">
+                        <source src="04.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-title">Tiros al arco</div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="none" poster="01.jpeg">
+                        <source src="01.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-title">Desde la banca</div>
+                </div>
+
+                <div class="video-card">
+                    <video controls preload="none" poster="03.jpeg">
+                        <source src="03.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-title">Comentarios técnicos (Tercer tiempo)</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Realizado con amor <span class="heart">❤</span> para todos los conductores de RBU San Carlos</p>
+    </footer>
+
+    <script>
+        // --- TABS ---
+        function openTab(tabName) {
+            var i;
+            var x = document.getElementsByClassName("tab-content");
+            var buttons = document.getElementsByClassName("nav-btn");
+
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+                x[i].classList.remove("active");
+            }
+            for (i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add("active");
+            }, 10);
+
+            let currentBtnIndex = 0;
+            if(tabName === 'carrusel') currentBtnIndex = 1;
+            if(tabName === 'videos') currentBtnIndex = 2;
+            buttons[currentBtnIndex].classList.add("active");
+        }
+
+        // --- MODAL ---
+        function openModal(src) {
+            var modal = document.getElementById("imageModal");
+            var modalImg = document.getElementById("imgExpanded");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+
+        // --- CARRUSEL ---
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex-1].style.display = "block";
+        }
+    </script>
+
+</body>
+</html>

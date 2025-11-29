@@ -1,0 +1,27 @@
+# --- Sistema Operativo (Basura de Mac y Windows) ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# --- IDEs y Editores (Configuraciones personales) ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*.iml
+
+# --- Archivos comprimidos y empaquetados ---
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.war
+*.jar
+*.ear
+
+# --- Logs y archivos temporales ---
+*.log
+tmp/
+temp/
